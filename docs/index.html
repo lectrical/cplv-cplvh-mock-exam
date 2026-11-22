@@ -1,596 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>City &amp; Guilds CPLV / CPLVH Mock Exam</title>
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --border: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-hover: #0ea5e9;
-      --health: #10b981;
-      --green: #22c55e;
-      --green-bg: rgba(34, 197, 94, 0.14);
-      --red: #ef4444;
-      --red-bg: rgba(239, 68, 68, 0.14);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 800px;
-    }
-
-    header {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .header-top {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    h1 {
-      font-size: 1.35rem;
-      font-weight: 700;
-    }
-
-    .subtitle {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .controls-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .toggle-group {
-      display: flex;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 4px;
-      gap: 4px;
-    }
-
-    .toggle-btn {
-      background: transparent;
-      color: var(--muted);
-      border: none;
-      padding: 7px 12px;
-      border-radius: 6px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .toggle-btn.active {
-      background: var(--accent);
-      color: #0f172a;
-    }
-
-    .toggle-btn.active-health {
-      background: var(--health);
-      color: #0f172a;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-    }
-
-    .meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .badge {
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--accent);
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 0.78rem;
-    }
-
-    .progress-track {
-      width: 100%;
-      height: 8px;
-      background: #0f172a;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 20px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--accent);
-      transition: width 0.25s ease;
-    }
-
-    .question-text {
-      font-size: 1.08rem;
-      font-weight: 600;
-      margin-bottom: 18px;
-    }
-
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .option-btn {
-      text-align: left;
-      background: #0f172a;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 13px 16px;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-    }
-
-    .option-btn:hover:not(:disabled) {
-      border-color: var(--accent);
-    }
-
-    .option-btn.correct {
-      border-color: var(--green);
-      background: var(--green-bg);
-    }
-
-    .option-btn.wrong {
-      border-color: var(--red);
-      background: var(--red-bg);
-    }
-
-    .option-btn:disabled {
-      cursor: default;
-    }
-
-    .explanation {
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-radius: 8px;
-      background: rgba(15, 23, 42, 0.75);
-      border-left: 4px solid var(--accent);
-      font-size: 0.92rem;
-      display: none;
-    }
-
-    .explanation.show {
-      display: block;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 20px;
-    }
-
-    .btn {
-      background: var(--accent);
-      color: #0f172a;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 18px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn:hover {
-      background: var(--accent-hover);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover {
-      color: var(--text);
-      border-color: var(--text);
-      background: transparent;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .result-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .score-big {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin: 8px 0;
-    }
-
-    .pass-pill {
-      display: inline-block;
-      padding: 5px 14px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    .pass-pill.pass {
-      background: var(--green-bg);
-      color: var(--green);
-      border: 1px solid var(--green);
-    }
-
-    .pass-pill.fail {
-      background: var(--red-bg);
-      color: var(--red);
-      border: 1px solid var(--red);
-    }
-
-    .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 10px;
-      margin: 20px 0;
-    }
-
-    .cat-box {
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 0.88rem;
-    }
-
-    .cat-box strong {
-      display: block;
-      margin-bottom: 4px;
-      color: var(--accent);
-    }
-  </style>
+  <title>City &amp; Guilds CPLV / CPLVH Study Guide &amp; Mock Exam</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
   <div class="app">
-    <header>
-      <div class="header-top">
-        <div>
-          <h1 id="main-title">City &amp; Guilds CPLV Mock Exam</h1>
-          <div id="main-subtitle" class="subtitle">Commercial / MOD (JSP 375 &amp; HSG85) &bull; 75-Question Bank &bull;
-            Pass Mark: 70%</div>
-        </div>
+    <header class="top-header">
+      <div>
+        <h1>City &amp; Guilds CPLV / CPLVH</h1>
+        <p class="subtitle">Visual Study Documentation &amp; 75-Question Mock Exam Simulator</p>
       </div>
-      <div class="controls-row">
-        <div class="toggle-group" aria-label="Course Track">
-          <button id="btn-cplv" class="toggle-btn active" onclick="setTrack('cplv')">CPLV (Commercial / MOD)</button>
-          <button id="btn-cplvh" class="toggle-btn" onclick="setTrack('cplvh')">CPLVH (Healthcare / HTM 06-02)</button>
-        </div>
-        <div class="toggle-group" aria-label="Exam Length">
-          <button id="btn-mock30" class="toggle-btn active" onclick="setMode('mock30')">30-Q Random Mock</button>
-          <button id="btn-full75" class="toggle-btn" onclick="setMode('full75')">Full 75-Q Bank</button>
-        </div>
-      </div>
+      <nav class="main-tabs" role="tablist">
+        <button id="tab-study" class="tab-btn active" role="tab">📘 Study Guide</button>
+        <button id="tab-exam" class="tab-btn" role="tab">📝 Mock Exam</button>
+      </nav>
     </header>
 
-    <div id="quiz-card" class="card">
-      <div class="meta-row">
-        <span id="q-counter">Question 1 of 30</span>
-        <span id="q-category" class="badge">Regulations</span>
-        <span id="q-score">Score: 0</span>
+    <!-- ==================== TAB 1: STUDY GUIDE ==================== -->
+    <main id="panel-study" class="tab-panel">
+      <div class="legend-bar">
+        <span class="pill pill-blue">🟦 Statutory / Core Rule</span>
+        <span class="pill pill-yellow">🟨 Caution / Exam Trap</span>
+        <span class="pill pill-red">🟥 Critical Safety / Instant Fail</span>
+        <span class="pill pill-green">🟩 Healthcare (CPLVH / HTM 06-02)</span>
       </div>
-      <div class="progress-track">
-        <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
-      </div>
-      <div id="question-text" class="question-text"></div>
-      <div id="options" class="options"></div>
-      <div id="explanation" class="explanation"></div>
-      <div class="actions">
-        <button class="btn btn-secondary" onclick="startQuiz()">New Shuffled Attempt</button>
-        <button id="next-btn" class="btn hidden" onclick="nextQuestion()">Next Question &rarr;</button>
-      </div>
-    </div>
 
-    <div id="result-card" class="card hidden">
-      <div class="result-header">
-        <div id="pass-badge" class="pass-pill"></div>
-        <div id="final-score" class="score-big"></div>
-        <div id="final-sub" class="subtitle"></div>
+      <!-- Module 1 -->
+      <section class="study-card">
+        <h2>Module 1: Dangers of Electricity</h2>
+        <p>Electricity kills and injures through four primary hazards: <strong>Electric Shock</strong>, <strong>Arc Flash / Burns</strong>, <strong>Fire &amp; Explosion</strong>, and <strong>Secondary Injuries</strong> (e.g., falling from height after an involuntary muscle jerk).</p>
+        <table>
+          <thead>
+            <tr><th>50 Hz AC Current</th><th>Physiological Effect</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>1 – 5 mA</strong></td><td>Threshold of perception; mild tingle.</td></tr>
+            <tr><td><strong>10 – 15 mA</strong></td><td><strong>Let-go threshold</strong> — muscle tetany prevents releasing the conductor.</td></tr>
+            <tr><td><strong>30 mA</strong></td><td>Respiratory paralysis; standard RCD trip rating for additional protection.</td></tr>
+            <tr class="row-danger"><td><strong>50 mA+</strong></td><td><strong>Ventricular fibrillation</strong> — fatal heart rhythm disruption.</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>3 Severity Factors:</strong> Current magnitude, duration of contact, and path through the body.</li>
+          <li><strong>Direct vs. Indirect Contact:</strong> Touching a bare live part vs. touching a normally dead metallic casing made live by a fault.</li>
+          <li><strong>Arc Flash:</strong> Generates radiant heat up to 20,000 °C, blast pressure, and molten metal.</li>
+        </ul>
+        <div class="callout callout-red">
+          <strong>Emergency Action:</strong> NEVER touch a casualty still in contact with a live source. Isolate/switch off the supply first, then summon medical aid and begin CPR.
+        </div>
+      </section>
+
+      <!-- Module 2 -->
+      <section class="study-card">
+        <h2>Module 2: Statutory &amp; Non-Statutory Regulations</h2>
+        <table>
+          <thead>
+            <tr><th>Document</th><th>Legal Status</th><th>Role</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Health &amp; Safety at Work Act 1974</strong></td><td><span class="pill pill-blue">Statutory</span></td><td>Overarching UK workplace safety law.</td></tr>
+            <tr><td><strong>Electricity at Work Regs 1989 (EAWR)</strong></td><td><span class="pill pill-blue">Statutory</span></td><td>Primary legal framework for all electrical work.</td></tr>
+            <tr><td><strong>BS 7671 (IET Wiring Regs)</strong></td><td>Non-Statutory</td><td>Installation standard (Section 710: Medical Locations).</td></tr>
+            <tr><td><strong>HSE HSG85 &amp; GS38</strong></td><td>Non-Statutory</td><td>Safe working practices (HSG85) &amp; test equipment (GS38).</td></tr>
+            <tr><td><strong>JSP 375 (Vol 3, Ch 3)</strong></td><td>Non-Statutory</td><td>MOD electrical safety rules (CPLV).</td></tr>
+            <tr><td><strong>HTM 06-02 &amp; HTM 06-01</strong></td><td><span class="pill pill-green">Non-Statutory</span></td><td>NHS operational LV safety (06-02) &amp; design (06-01).</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-blue">
+          <strong>Key EAWR 1989 Regulations:</strong>
+          <strong>Reg 3</strong> (Employer &amp; Employee duties) &bull;
+          <strong>Reg 4(4)</strong> (Protective equipment) &bull;
+          <strong>Reg 6</strong> (Adverse environments) &bull;
+          <strong>Reg 10</strong> (Connections) &bull;
+          <strong>Reg 11</strong> (Excess current) &bull;
+          <strong>Reg 12</strong> (Isolation) &bull;
+          <strong>Reg 13</strong> (Work dead) &bull;
+          <strong>Reg 14</strong> (Live working) &bull;
+          <strong>Reg 15</strong> (Working space &amp; lighting) &bull;
+          <strong>Reg 16</strong> (Competence) &bull;
+          <strong>Reg 29</strong> (Due diligence defence).
+        </div>
+        <ul>
+          <li><strong>ELV:</strong> Up to 50 V AC or 120 V ripple-free DC.</li>
+          <li><strong>LV:</strong> Exceeding ELV up to <strong>1,000 V AC</strong> or <strong>1,500 V DC</strong> between conductors.</li>
+          <li><strong>HV:</strong> Exceeding 1,000 V AC or 1,500 V DC.</li>
+        </ul>
+      </section>
+
+      <!-- Module 3 -->
+      <section class="study-card">
+        <h2>Module 3: Roles, Duties &amp; Hierarchy</h2>
+        <table>
+          <thead>
+            <tr><th>Role</th><th>Primary Responsibilities</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Designated Person (DP)</strong> <span class="pill pill-green">HTM 06-02</span></td><td>Board-level director with overall accountability for the Trust's electrical safety policy.</td></tr>
+            <tr><td><strong>Authorising Engineer (AE)</strong></td><td>Independent specialist; conducts annual compliance audits and assesses AP candidates.</td></tr>
+            <tr><td><strong>Authorised Person (AP)</strong></td><td>Manages day-to-day LV safety, switchroom keys, Safety Logbook, issues/cancels PTWs, and appoints CPs in writing (HTM 06-02).</td></tr>
+            <tr><td><strong>Competent Person (CP)</strong></td><td>Receives PTWs, verifies isolation/proof of dead, supervises working parties, and executes LV work within appointed scope.</td></tr>
+            <tr><td><strong>Instructed Person</strong></td><td>Advised or supervised by a Skilled/Competent Person to avoid electrical danger.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-yellow">
+          <strong>Exam Traps:</strong> A CPLV/CPLVH certificate proves <em>training</em>, not authority — you must hold <strong>formal written site-specific appointment</strong>. Refresher training is required every <strong>3 years</strong>. Apprentices require <strong>continuous direct supervision</strong>. Always refuse unfamiliar work (Reg 16) and escalate to the AP.
+        </div>
+      </section>
+
+      <!-- Module 4 -->
+      <section class="study-card">
+        <h2>Module 4: Safety Rule Book &amp; Documentation</h2>
+        <table>
+          <thead>
+            <tr><th>Document</th><th>Purpose</th><th>Key Rule</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Permit to Work (PTW)</strong></td><td>Authorises dead work on isolated LV apparatus.</td><td>Issued by AP; Receipt &amp; Clearance signed by CP; Cancelled by AP.</td></tr>
+            <tr><td><strong>Limitation of Access (LOA)</strong></td><td>Authorises non-electrical work near live apparatus.</td><td>Strictly <strong>prohibits</strong> any work on electrical equipment.</td></tr>
+            <tr><td><strong>Sanction for Test (SFT)</strong></td><td>Authorises controlled testing with test voltages/earth removal.</td><td>Cannot be active alongside a PTW on the same apparatus.</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>Caution Notice:</strong> Posted <em>at the point of isolation</em>.</li>
+          <li><strong>Danger Notice:</strong> Posted <em>on adjacent live equipment</em>.</li>
+          <li><strong>Safety Key Box (SKB):</strong> AP's isolation padlock key is locked inside; the <strong>CP retains the SKB key</strong> while the PTW is live.</li>
+          <li><strong>Scope &amp; Handover:</strong> Never work outside the PTW scope. Never hand a PTW directly to a relief CP — the AP must formally transfer or cancel &amp; reissue it. Retain cancelled documents for <strong>3 years</strong>.</li>
+        </ul>
+      </section>
+
+      <!-- Module 5 -->
+      <section class="study-card">
+        <h2>Module 5: Safe Isolation &amp; LOTO (Prove–Test–Prove)</h2>
+        <ol class="step-list">
+          <li><strong>Identify &amp; Liaise:</strong> Identify the circuit and gain permission. <span class="pill pill-green">Healthcare: Mandatory agreement from Clinical/Ward Manager first.</span></li>
+          <li><strong>Isolate All Sources:</strong> Switch off main supply + all back-feeds (generators, UPS, IPS, dual feeders) and verify capacitor discharge. <em>Never use emergency stops or single-pole wall switches for isolation.</em></li>
+          <li><strong>Secure (LOTO):</strong> Apply a <strong>unique-key personal padlock</strong> (or multi-lock hasp for multiple teams) and post a Caution Notice. Withdrawn fuses require a lockable insert and retaining the fuse.</li>
+          <li><strong>Prove – Test – Prove:</strong> Check two-pole GS38 indicator on a <strong>proving unit</strong> &rarr; test all conductors (<strong>3 tests</strong> on 1-phase; <strong>10 tests</strong> on 3-phase+N) &rarr; re-check on proving unit.</li>
+          <li><strong>Portable Earths (if required):</strong> Connect <strong>to earth first</strong>; disconnect <strong>from earth last</strong>.</li>
+        </ol>
+        <div class="callout callout-red">
+          <strong>Instant Fail:</strong> If your voltage indicator fails the second proving-unit check, treat the circuit as <strong>LIVE</strong>. Never cut off a lost-key padlock — follow the AP's formal lock-removal procedure.
+        </div>
+      </section>
+
+      <!-- Module 6 -->
+      <section class="study-card">
+        <h2>Module 6: Live Working, GS38 &amp; Healthcare Systems</h2>
+        <div class="callout callout-blue">
+          <strong>EAWR Reg 14 — All 3 Conditions Required for Live Working:</strong>
+          (1) Unreasonable in all circumstances to be dead; (2) Reasonable in all circumstances to work live; (3) Suitable precautions (PPE, barriers, ASP) are taken. <em>Convenience never justifies live work.</em>
+        </div>
+        <ul>
+          <li><strong>GS38 Test Probes:</strong> Max <strong>4 mm</strong> exposed metal tip (2 mm recommended), insulated finger barriers, HBC fuses up to <strong>500 mA</strong>. <strong>CAT IV</strong> required at main LV intake/origin.</li>
+          <li><strong>Banned for Proving Dead:</strong> Digital multimeters, single-pole neon screwdrivers, and non-contact volt sticks (screened by SWA armouring/conduit).</li>
+          <li><strong>Live PPE Standards:</strong> Insulated tools (<strong>BS EN 60900</strong>), Class 0 gloves up to 1000 V AC (<strong>BS EN 60903</strong> — visual &amp; air-inflation roll test before use), insulating matting (<strong>BS EN 61111</strong>). Remove all metallic jewellery; assign an <strong>Accompanying Safety Person (ASP)</strong>.</li>
+        </ul>
+        <div class="callout callout-green">
+          <strong>Healthcare LV Systems (CPLVH / HTM 06-01):</strong> Operating Theatres &amp; ICUs are <strong>Group 2 Medical Locations</strong>. They use a <strong>Medical Isolated Power Supply (IPS)</strong> with an <strong>Insulation Monitoring Device (IMD)</strong> so a first earth fault alarms without tripping life-support power. Always verify Essential (generator/UPS backed) vs. Non-Essential supplies.
+        </div>
+      </section>
+
+      <!-- Module 7 -->
+      <section class="study-card">
+        <h2>Module 7: Testing Prior to Re-energisation &amp; Restoration</h2>
+        <ul>
+          <li><strong>Dead Pre-Energisation Tests (BS 7671):</strong> Continuity, <strong>Insulation Resistance</strong> (minimum <strong>1.0 M&Omega;</strong> at 500 V DC for 230/400 V circuits), and <strong>Polarity</strong> (single-pole switches/fuses in line conductor only).</li>
+          <li><strong>Restoration Sequence (after PTW Cancellation):</strong> (1) Remove temporary earths (earth last) &rarr; (2) Remove locks &amp; notices &rarr; (3) Re-energise.</li>
+        </ul>
+        <div class="callout callout-red">
+          <strong>Fault on Re-energisation:</strong> If a breaker trips instantaneously on re-energisation, NEVER reset it blindly. Isolate, lock off, prove dead, and investigate the fault.
+        </div>
+      </section>
+    </main>
+
+    <!-- ==================== TAB 2: MOCK EXAM ==================== -->
+    <main id="panel-exam" class="tab-panel hidden">
+      <div class="exam-controls">
+        <div class="toggle-group" aria-label="Course Track">
+          <button id="btn-cplv" class="toggle-btn active">CPLV (Commercial / MOD)</button>
+          <button id="btn-cplvh" class="toggle-btn">CPLVH (Healthcare / HTM 06-02)</button>
+        </div>
+        <div class="toggle-group" aria-label="Exam Length">
+          <button id="btn-mock30" class="toggle-btn active">30-Q Random Mock</button>
+          <button id="btn-full75" class="toggle-btn">Full 75-Q Bank</button>
+        </div>
       </div>
-      <div id="cat-breakdown" class="cat-grid"></div>
-      <div style="text-align:center; margin-top: 16px;">
-        <button class="btn" onclick="startQuiz()">Take Another Shuffled Attempt</button>
+
+      <div id="quiz-card" class="card">
+        <div class="meta-row">
+          <span id="q-counter">Question 1 of 30</span>
+          <span id="q-category" class="badge">Regulations</span>
+          <span id="q-score">Score: 0</span>
+        </div>
+        <div class="progress-track"><div id="progress-fill" class="progress-fill" style="width: 0%"></div></div>
+        <div id="question-text" class="question-text"></div>
+        <div id="options" class="options"></div>
+        <div id="explanation" class="explanation"></div>
+        <div class="actions">
+          <button id="restart-btn" class="btn btn-secondary">New Shuffled Attempt</button>
+          <button id="next-btn" class="btn hidden">Next Question &rarr;</button>
+        </div>
       </div>
-    </div>
+
+      <div id="result-card" class="card hidden">
+        <div class="result-header">
+          <div id="pass-badge" class="pass-pill"></div>
+          <div id="final-score" class="score-big"></div>
+          <div id="final-sub" class="subtitle"></div>
+        </div>
+        <div id="cat-breakdown" class="cat-grid"></div>
+        <div style="text-align:center; margin-top: 16px;">
+          <button id="retry-btn" class="btn">Take Another Shuffled Attempt</button>
+        </div>
+      </div>
+    </main>
   </div>
 
-  <script>
-    // 60 Core Questions shared by both CPLV and CPLVH
-    const SHARED_QUESTIONS = [
-      {c: "Regulations", q: "During a site compliance audit, an inspector asks which document carries direct statutory legal force in the United Kingdom regarding electrical safety at work. Which document should you identify?", o: ["BS 7671 IET Wiring Regulations", "Electricity at Work Regulations 1989", "HTM 06-02 / JSP 375", "HSE Guidance Note GS38"], a: 1, e: "The Electricity at Work Regulations 1989 (EAWR) are statutory law; BS 7671, HTM 06-02, JSP 375, and GS38 are non-statutory guidance."},
-      {c: "Regulations", q: "You are asked to classify a 1200 V DC battery bank within a UPS room according to UK electrical safety voltage bands. Under which voltage band does this system fall?", o: ["Extra-Low Voltage", "Low Voltage", "High Voltage", "Medium Voltage"], a: 1, e: "Low Voltage (LV) extends up to 1000 V AC or 1500 V DC between conductors."},
-      {c: "Regulations", q: "You arrive at an LV switchroom to perform maintenance and find the room severely cluttered with stored materials and the emergency lighting completely failed. Which EAWR 1989 regulation is directly breached?", o: ["Regulation 12", "Regulation 14", "Regulation 15", "Regulation 16"], a: 2, e: "Regulation 15 mandates adequate working space, adequate means of access, and adequate lighting for electrical work."},
-      {c: "Regulations", q: "Under the Electricity at Work Regulations 1989, which regulation provides a legal defence of 'due diligence' for breaching an absolute duty?", o: ["Regulation 4", "Regulation 16", "Regulation 29", "Regulation 3"], a: 2, e: "Regulation 29 allows a defence if the duty holder proves they took all reasonable steps and exercised all due diligence."},
-      {c: "Regulations", q: "Under Regulation 3 of the Electricity at Work Regulations 1989, which group has a statutory duty to cooperate with their employer and comply with the regulations?", o: ["Equipment manufacturers only", "Employees", "Building visitors", "Utility suppliers only"], a: 1, e: "Regulation 3 places direct legal duties on both employers and employees to comply with the regulations."},
-      {c: "Regulations", q: "Which regulation of the Electricity at Work Regulations 1989 specifically requires protective equipment provided for electrical work to be suitable, maintained, and properly used?", o: ["Regulation 4(4)", "Regulation 12", "Regulation 13", "Regulation 29"], a: 0, e: "Regulation 4(4) specifically governs the suitability, maintenance, and proper use of electrical protective equipment."},
-      {c: "Regulations", q: "You are inspecting an LV junction box in a wet, corrosive washdown area and notice perished enclosure seals. Which EAWR 1989 regulation is directly relevant?", o: ["Regulation 6", "Regulation 10", "Regulation 14", "Regulation 15"], a: 0, e: "Regulation 6 requires electrical equipment exposed to adverse or hazardous environments (wet, corrosive, dusty) to be suitably protected."},
-      {c: "Regulations", q: "Which regulation of the Electricity at Work Regulations 1989 mandates that every electrical joint and connection must be mechanically and electrically suitable for use?", o: ["Regulation 8", "Regulation 10", "Regulation 11", "Regulation 13"], a: 1, e: "Regulation 10 covers connections, requiring every joint to be mechanically and electrically suitable."},
-      {c: "Regulations", q: "Under the Electricity at Work Regulations 1989, which regulation requires efficient means to protect every part of a system from excess current?", o: ["Regulation 6", "Regulation 10", "Regulation 11", "Regulation 15"], a: 2, e: "Regulation 11 requires efficient, suitably located means for protecting against excess current (fuses, MCBs, MCCBs)."},
-      {c: "Regulations", q: "According to UK electrical safety voltage band definitions, what is the upper AC voltage limit of Extra-Low Voltage (ELV)?", o: ["25 V AC", "50 V AC", "110 V AC", "230 V AC"], a: 1, e: "Extra-Low Voltage (ELV) does not exceed 50 V AC or 120 V ripple-free DC."},
-      {c: "Regulations", q: "What is the upper AC voltage limit between conductors for a system to be classified as Low Voltage (LV) in the UK?", o: ["400 V AC", "600 V AC", "1000 V AC", "1500 V AC"], a: 2, e: "Low Voltage (LV) covers systems exceeding ELV up to 1000 V AC (or 1500 V DC) between conductors."},
-      {c: "Dangers of Electricity", q: "On a 50 Hz AC Low Voltage system, approximately what level of electric current passing through the chest is widely recognised as the threshold capable of triggering ventricular fibrillation?", o: ["5 mA", "15 mA", "50 mA", "500 mA"], a: 2, e: "Around 50 mA of 50 Hz AC across the chest can trigger fatal ventricular fibrillation."},
-      {c: "Dangers of Electricity", q: "What is the primary injury mechanism associated with an electrical arc flash event on an energised Low Voltage switchboard?", o: ["Intense radiant heat and molten metal", "Carbon monoxide poisoning", "Mild static shock", "Low-frequency vibration"], a: 0, e: "Arc flashes generate extreme temperatures (up to 20,000 C), intense radiant heat, blast pressure, and molten metal."},
-      {c: "Dangers of Electricity", q: "Which three physical factors primarily determine the physiological severity of an electric shock to the human body?", o: ["Cable colour, fuse rating, and room size", "Current magnitude, duration of contact, and body path", "Power factor, frequency, and cable length", "Ambient humidity, footwear brand, and age"], a: 1, e: "Shock severity depends on how much current flows, how long it flows, and whether its path crosses vital organs like the heart."},
-      {c: "Dangers of Electricity", q: "Why is 50 Hz AC generally considered more hazardous to the human heart and muscles than DC at the same voltage?", o: ["It travels faster through copper", "It readily induces muscle tetany and fibrillation", "It has higher thermal resistance", "DC cannot cause burns"], a: 1, e: "50 Hz AC closely matches the frequency that triggers muscular contraction ('can't let go') and ventricular fibrillation."},
-      {c: "Dangers of Electricity", q: "You enter a plant room and see a colleague collapsed and still clutching an exposed live 230 V cable. What is your immediate first action?", o: ["Grab their shoulders and pull them away", "Switch off or isolate the supply", "Pour water on the cable", "Start chest compressions immediately while they hold the cable"], a: 1, e: "Never touch a casualty still in contact with a live source; isolate the supply first so you do not become a second casualty."},
-      {c: "Dangers of Electricity", q: "In UK electrical safety terminology, what is defined as 'indirect contact'?", o: ["Touching a bare live busbar directly", "Contact with an exposed-conductive-part made live by a fault", "Receiving a shock through insulated gloves", "Being struck by lightning"], a: 1, e: "Indirect contact occurs when a person touches a normally dead metallic casing that has become live due to an insulation fault."},
-      {c: "Dangers of Electricity", q: "Which secondary injury is a common fatal consequence of receiving a non-lethal electric shock while maintaining high-bay lighting?", o: ["Hearing loss", "Falling from height", "Hypothermia", "Eye strain"], a: 1, e: "Even a small, non-lethal shock can cause an involuntary muscle jerk resulting in a fatal fall from ladders or scaffolds."},
-      {c: "Safe Isolation & GS38", q: "Before proving an LV distribution board dead, you inspect your two-pole voltage indicator leads and notice damaged probe shrouds exposing 6 mm of bare metal tip. What action must you take?", o: ["Wrap the tips in PVC tape", "Withdraw the leads from service immediately", "Use them carefully on 230 V only", "File the tips down to 4 mm"], a: 1, e: "GS38 requires maximum 4 mm exposed tips (2 mm recommended); damaged test leads must be withdrawn from service."},
-      {c: "Safe Isolation & GS38", q: "You are required to prove dead at the main LV intake switchgear directly connected to the site's supply transformer. Which minimum overvoltage measurement category (CAT) rating must your voltage indicator hold?", o: ["CAT I", "CAT II", "CAT III", "CAT IV"], a: 3, e: "CAT IV is required at the origin of the installation (main intake switchgear and primary supply)."},
-      {c: "Safe Isolation & GS38", q: "Two separate maintenance teams are assigned to work simultaneously on different sections of the same isolated LV distribution board. How must the main point of isolation be locked off?", o: ["One team locks off and informs the other", "Each team fits a unique padlock to a multi-lock hasp", "The AP holds a single padlock key for both teams", "Use a cable tie with two Caution Notices"], a: 1, e: "A multi-lock hasp ensures the supply cannot be restored until every team has removed its own unique padlock."},
-      {c: "Safe Isolation & GS38", q: "A colleague suggests using a standard digital multimeter instead of a two-pole GS38 voltage indicator to prove a 400 V motor circuit dead. What is the primary hazard?", o: ["Excessive current draw tripping the upstream RCD", "Incorrect range selection or blown fuse giving a false dead reading", "Multimeters cannot measure 400 V AC", "Multimeters only work on DC circuits"], a: 1, e: "Wrong range selection, blown internal fuses, or flat batteries on a multimeter can produce a lethal false-dead reading."},
-      {c: "Safe Isolation & GS38", q: "During safe isolation, your GS38 voltage indicator lights on the proving unit, shows zero on the isolated circuit, but FAILS to light when re-checked on the proving unit. What must you do?", o: ["Proceed because the circuit read zero", "Treat the circuit as live and obtain a working tester", "Check the circuit with a neon screwdriver instead", "Tap the indicator and continue"], a: 1, e: "If the second proving check fails, the tester may have failed during testing; always treat the circuit as live."},
-      {c: "Safe Isolation & GS38", q: "When proving a single-phase 230 V AC circuit dead with a two-pole voltage indicator, which combination of conductor tests must be completed?", o: ["L-N only", "L-E only", "L-N, L-E, and N-E", "L-N and L-E only"], a: 2, e: "All three combinations (L-N, L-E, and N-E) must be tested to confirm no voltage is present on any conductor."},
-      {c: "Safe Isolation & GS38", q: "An engineer presses and padlocks an emergency stop push-button in the 'off' position before opening a 400 V motor terminal box. Why does this fail EAWR Regulation 12?", o: ["Push-buttons cannot accept a Caution Notice", "Control circuits do not provide secure electrical isolation", "Emergency stops only isolate the neutral", "It violates BS EN 60900"], a: 1, e: "Emergency stops break control circuits, not main power conductors, and cannot be relied upon for safe isolation."},
-      {c: "Safe Isolation & GS38", q: "Which condition can cause a non-contact voltage pen (volt stick) to give a false 'dead' indication when held against a live Low Voltage cable?", o: ["High ambient temperature", "Metallic armouring (SWA) or earthed conduit screening the electric field", "Using it on 50 Hz AC", "Standing on dry concrete"], a: 1, e: "SWA metallic armouring or earthed conduit screens the electric field, causing non-contact pens to miss live conductors."},
-      {c: "Safe Isolation & GS38", q: "When applying and subsequently removing temporary portable circuit earths on an isolated LV system under Regulation 13, what is the mandatory sequence?", o: ["Connect to live conductor first, disconnect from earth first", "Connect to earth first, disconnect from earth last", "Connect both ends simultaneously", "Order does not matter on LV"], a: 1, e: "Always connect to earth first and disconnect from earth last so the operator is protected at all times."},
-      {c: "Safe Isolation & GS38", q: "At the end of a maintenance task, a Competent Person realises they have lost the unique key to their personal safety padlock securing an LV isolator. What is the correct action?", o: ["Cut the padlock off immediately with bolt croppers", "Follow the formal lock-removal procedure authorised by the AP", "Bypass the isolator temporarily", "Leave it locked until the next shift"], a: 1, e: "Lost-key lock removal requires a formal documented procedure authorised by the Authorised Person."},
-      {c: "Safe Isolation & GS38", q: "Under HSE Guidance Note GS38, what is the maximum permitted length of exposed metal tip on a test probe (with 2 mm or less recommended)?", o: ["1 mm", "4 mm", "10 mm", "15 mm"], a: 1, e: "GS38 specifies a maximum exposed metal tip of 4 mm, with 2 mm or less (or spring-loaded retractable tips) recommended."},
-      {c: "Safe Isolation & GS38", q: "According to HSE Guidance Note GS38, what current-limiting protection should be fitted inside compliant test probes or leads used on high-energy LV systems?", o: ["13 A plug-top fuses", "HBC fuses rated up to 500 mA", "32 A miniature circuit breakers", "No fuses are permitted"], a: 1, e: "GS38 recommends High Breaking Capacity (HBC) fuses rated up to 500 mA (and/or current-limiting resistors) to limit arc energy."},
-      {c: "Safe Isolation & GS38", q: "Which physical design feature on GS38-compliant test probes prevents the user's fingers from slipping forward onto live conductors?", o: ["Long metal shafts", "Insulated finger barriers", "Crocodile clips", "Uninsulated handles"], a: 1, e: "Insulated finger barriers/guards prevent accidental forward slip toward live terminals."},
-      {c: "Safe Isolation & GS38", q: "When isolating a final circuit by withdrawing a BS 88 or BS 3036 fuse carrier, what additional step is required to ensure secure isolation?", o: ["Leave the fuse on top of the board", "Fit a lockable fuse insert, retain the fuse, and post a Caution Notice", "Close the distribution board door", "Switch off the local socket"], a: 1, e: "Simply removing a fuse is not secure; fit a lockable blanking insert, keep the fuse in your possession, and post a Caution Notice."},
-      {c: "Safe Isolation & GS38", q: "Why is a standard single-pole lighting wall switch NOT acceptable as a point of isolation for circuit maintenance?", o: ["It is too small to see", "It only switches one pole and cannot be securely locked off", "It is rated at 10 A", "It is made of plastic"], a: 1, e: "Functional wall switches do not isolate all live conductors and cannot be securely locked off against inadvertent re-energisation."},
-      {c: "Safe Isolation & GS38", q: "Why is a dedicated proving unit preferred over a live 230 V socket outlet when verifying a two-pole voltage indicator?", o: ["It is cheaper than a socket", "It supplies a safe, current-limited voltage without high fault energy", "It tests earth fault loop impedance", "Sockets cannot illuminate two-pole testers"], a: 1, e: "A proving unit delivers a safe, current-limited voltage at the point of work without exposing the user to mains fault energy."},
-      {c: "Safe Isolation & GS38", q: "How many individual voltage tests must be carried out with a two-pole voltage indicator to fully prove a 3-phase and neutral (400 V / 230 V) circuit dead?", o: ["3 tests", "6 tests", "10 tests", "4 tests"], a: 2, e: "Testing all combinations between L1, L2, L3, N, and E requires 10 separate tests."},
-      {c: "Safe Isolation & GS38", q: "Why are single-pole neon test screwdrivers banned for proving dead under HSE GS38 and UK safety rule books?", o: ["They are too bright", "They rely on current passing through the user to earth", "They only work on 3-phase systems", "They require batteries"], a: 1, e: "Neon screwdrivers pass current through the operator's body to earth and are notoriously prone to false readings."},
-      {c: "Safe Isolation & GS38", q: "In Lock-Off Tag-Out (LOTO) procedures, what is meant by a 'unique key' safety padlock?", o: ["A padlock painted bright yellow", "A padlock with only one operating key in circulation", "A combination padlock shared by the team", "A master-keyed padlock"], a: 1, e: "A unique-key padlock has only one key in circulation so no one else can unlock your isolation."},
-      {c: "Live Working", q: "Live diagnostic fault-finding has been legally justified on an LV control panel, and an Accompanying Safety Person (ASP) is assigned. What is the primary responsibility of the ASP?", o: ["Hold the test probes for the CP", "Isolate the supply and administer emergency aid/resuscitation if needed", "Sign the Permit to Work on behalf of the AP", "Record test results in the logbook"], a: 1, e: "The ASP must be trained to switch off the supply immediately and provide resuscitation/first aid in an emergency."},
-      {c: "Live Working", q: "A manager insists you replace a faulty 63 A MCCB inside a live distribution board because shutting down the board will interrupt non-critical office lighting for 20 minutes. How must you respond under EAWR Regulation 14?", o: ["Proceed wearing Class 0 gloves", "Refuse live work and arrange a planned shutdown", "Ask the manager to sign a disclaimer", "Work live only if an ASP is present"], a: 1, e: "Convenience or minor disruption to non-critical areas never justifies live working under Regulation 14."},
-      {c: "Live Working", q: "Which British/European standard confirms insulated hand tools (screwdrivers, pliers) are tested and rated for live working up to 1000 V AC?", o: ["BS EN 61243", "BS EN 60900", "BS EN 60903", "BS EN 61111"], a: 1, e: "BS EN 60900 specifies insulated hand tools rated up to 1000 V AC / 1500 V DC."},
-      {c: "Live Working", q: "You must work on a dead, isolated outgoing feeder inside a large LV distribution panel where adjacent incoming busbars remain live at 400 V AC. What physical control must be installed before work begins?", o: ["A Caution Notice only", "Approved insulating barriers or shrouds", "A cardboard divider", "Red hazard tape"], a: 1, e: "Approved insulating barriers or shrouds must screen adjacent live parts to prevent accidental contact."},
-      {c: "Live Working", q: "Which British/European standard specifies electrically insulating gloves (such as Class 0 rated up to 1000 V AC) for LV live working?", o: ["BS EN 60900", "BS EN 60903", "BS EN 61111", "BS 7671"], a: 1, e: "BS EN 60903 covers electrically insulating gloves; Class 0 is rated up to 1000 V AC."},
-      {c: "Live Working", q: "Which pre-use check must be performed on Class 0 rubber insulating gloves immediately before every live working task?", o: ["Submerge them in water", "Visual inspection and air-inflation roll test", "Test them with a multimeter", "Heat them to check flexibility"], a: 1, e: "Always visually inspect for cuts/ozone cracking and roll the cuff to trap air (air-inflation test) to detect pinholes."},
-      {c: "Live Working", q: "Which British/European standard applies to electrically insulating matting used in front of Low Voltage switchboards?", o: ["BS EN 60900", "BS EN 60903", "BS EN 61111", "BS 88"], a: 2, e: "BS EN 61111 specifies live working electrical insulating matting."},
-      {c: "Live Working", q: "Before undertaking justified live diagnostic testing inside an LV control panel, what personal preparation is mandatory regarding metallic items?", o: ["Cover rings with plasters", "Remove all metallic jewellery, rings, and watches", "Wear a metal belt buckle for earthing", "No preparation is needed if wearing boots"], a: 1, e: "All conductive jewellery, rings, and watches must be removed to prevent short circuits and severe arc burns."},
-      {c: "Documentation", q: "You have isolated an outgoing feeder in a multi-section LV switchboard to carry out dead work, while the adjacent incoming busbar cubicle remains energised at 400 V AC. Where must a Danger Notice be posted?", o: ["On the isolated circuit breaker", "On the switchroom exit door only", "On the adjacent live equipment", "On the Permit to Work clipboard"], a: 2, e: "Danger Notices warn of live equipment adjacent to the work area; Caution Notices are placed at the point of isolation."},
-      {c: "Documentation", q: "Where must a 'Caution Notice' be displayed during dead working on an isolated LV circuit?", o: ["At the point of isolation", "On adjacent live equipment", "On the van windscreen", "Inside the CP's toolbox"], a: 0, e: "Caution Notices are fixed at every point of isolation to warn others not to interfere with the isolated circuit."},
-      {c: "Documentation", q: "Your shift ends before an LV switchgear repair covered by a Permit to Work is finished, and a relief Competent Person arrives. What is the correct handover procedure?", o: ["Hand the paper PTW directly to the relief CP", "Have the AP formally transfer or cancel and reissue the PTW", "Leave the PTW on the switchboard", "Sign Clearance and let the relief CP work without a PTW"], a: 1, e: "Only the Authorised Person can formally transfer, or cancel and reissue, a Permit to Work to a new CP."},
-      {c: "Documentation", q: "Once repair work under a Permit to Work is finished, what does the Competent Person's signature in the Clearance section formally declare?", o: ["The AP has already restored power", "All personnel, tools, and temporary earths are clear and equipment is safe to energise", "The job is paused for lunch", "The equipment is permanently decommissioned"], a: 1, e: "Signing Clearance confirms all persons, tools, and temporary earths are clear and the circuit is safe to energise."},
-      {c: "Documentation", q: "While working under a Permit to Work to replace a contactor in Panel A, you notice a loose neutral inside an adjacent isolated motor starter in Panel B. What must you do?", o: ["Tighten it immediately while Panel B is off", "Leave Panel B untouched until separate authorisation is issued", "Add Panel B to your PTW in pen", "Ask your apprentice to tighten it"], a: 1, e: "Never work outside the exact written scope of an active Permit to Work."},
-      {c: "Documentation", q: "After the Competent Person has signed the Clearance section of a Permit to Work, who is responsible for signing the Cancellation section?", o: ["The Competent Person", "The Authorised Person", "The Authorising Engineer", "The site security officer"], a: 1, e: "Only the Authorised Person can formally cancel a Permit to Work after the CP has signed Clearance."},
-      {c: "Documentation", q: "What is the rule if a Competent Person realises that additional electrical work outside the written scope of an active Permit to Work is needed?", o: ["Complete the extra work and note it later", "Clear the permit and obtain a new PTW from the AP", "Cross out the old scope and initial the change", "Proceed if the circuit is already dead"], a: 1, e: "A PTW cannot be casually amended; the existing permit must be cleared and a new PTW issued for the revised scope."},
-      {c: "Documentation", q: "What is the primary purpose of the site Electrical Safety Logbook (Operating Record)?", o: ["Recording staff holiday dates", "Maintaining a chronological record of switching, isolations, and permits", "Storing equipment purchase invoices", "Listing emergency phone numbers only"], a: 1, e: "The logbook provides a permanent, chronological audit trail of all switching operations, isolations, and safety documents."},
-      {c: "Documentation", q: "Before signing the Receipt section of a Permit to Work, what must the Competent Person verify with the Authorised Person?", o: ["The cost of replacement parts", "The point of isolation, safety locks/notices, and proof of dead", "The AP's annual audit score", "The building fire alarm log"], a: 1, e: "The CP must be shown the point of isolation, verify locks/notices, and witness or confirm proof of dead before signing Receipt."},
-      {c: "Documentation", q: "How does a Limitation of Access (LOA) fundamentally differ from a Permit to Work (PTW)?", o: ["An LOA is only for High Voltage", "An LOA strictly prohibits work on electrical apparatus", "An LOA is issued by the Competent Person", "An LOA does not require a signature"], a: 1, e: "An LOA authorises non-electrical work in an area with electrical hazards and strictly forbids working on electrical equipment."},
-      {c: "Re-energisation", q: "You have replaced a damaged 3-phase armoured sub-main cable and are completing pre-energisation checks. Which dead test verifies there is no short circuit or insulation breakdown between live conductors and earth?", o: ["Earth fault loop impedance test", "Insulation resistance test", "RCD trip-time test", "Phase rotation test"], a: 1, e: "Insulation resistance (IR) testing confirms there are no short circuits or insulation faults before re-energising."},
-      {c: "Re-energisation", q: "Before re-energising a newly repaired single-phase lighting circuit, which dead test confirms that single-pole switches and fuses are connected in the line conductor only?", o: ["Insulation resistance test", "Polarity test", "Earth electrode test", "Prospective fault current test"], a: 1, e: "A polarity test verifies that single-pole switching and protective devices are wired strictly in the line conductor."},
-      {c: "Re-energisation", q: "Under BS 7671, what is the minimum acceptable insulation resistance value for a 230 V / 400 V LV circuit tested at 500 V DC prior to re-energisation?", o: ["0.5 MΩ", "1.0 MΩ", "2.0 MΩ", "10.0 MΩ"], a: 1, e: "BS 7671 specifies a minimum insulation resistance of 1.0 MΩ at 500 V DC for LV circuits up to 500 V."},
-      {c: "Re-energisation", q: "Once a Permit to Work has been cleared and cancelled, what is the correct sequence for restoring power to an isolated LV circuit that had temporary portable earths fitted?", o: ["Energise first, then remove earths", "Remove temporary earths, remove locks and notices, then energise", "Remove locks, energise, then remove earths", "Remove notices only"], a: 1, e: "All temporary earths must be removed before removing locks/notices and energising, otherwise a dead short circuit will occur."},
-      {c: "Re-energisation", q: "Immediately after re-energising an LV sub-main circuit breaker following maintenance, the breaker trips instantaneously on fault. What is the correct action?", o: ["Reset the breaker twice to see if it holds", "Isolate, lock off, prove dead, and investigate the fault", "Hold the breaker handle in the ON position", "Increase the breaker trip setting"], a: 1, e: "Never blindly re-close onto a fault; isolate, lock off, prove dead, and locate the cause before re-energising."}
-    ];
-
-    // 15 CPLV (Commercial / MOD / JSP 375 / HSG85) Specific Questions
-    const CPLV_SPECIFIC = [
-      {c: "Roles & Duties (CPLV)", q: "An electrician holds a valid City & Guilds Assured CPLV certificate obtained at their previous workplace and starts a new role on a commercial/MOD estate. What is required before they can act as a Competent Person on the new site?", o: ["Countersigning by the previous employer", "Formal site-specific appointment by management", "Retaking the 2-day course immediately", "Verbal approval from another electrician"], a: 1, e: "A training certificate proves knowledge, but formal written site-specific appointment by management is required before acting as a CP."},
-      {c: "Roles & Duties (CPLV)", q: "Under JSP 375 and commercial LV safety frameworks, who conducts independent annual compliance audits of the electrical safety system and recommends candidates for appointment as Authorised Persons?", o: ["The Duty Authorised Person", "The Authorising Engineer", "The Competent Person", "The HSE Inspector"], a: 1, e: "The Authorising Engineer (AE) is the independent specialist who audits the system and assesses AP candidates."},
-      {c: "Roles & Duties (CPLV)", q: "A mechanical fitter asks to open a locked LV switchboard and isolate a 400 V pump motor. Under EAWR Regulation 16, what criteria determine whether they are legally competent?", o: ["Holding a general CSCS card", "Technical knowledge, experience, and appropriate supervision", "Working on site for over 5 years", "Having a personal padlock"], a: 1, e: "Regulation 16 defines competence through technical knowledge, experience, and (where necessary) degree of supervision."},
-      {c: "Roles & Duties (CPLV)", q: "Under BS 7671 and UK electrical safety definitions, how does an 'Electrically Instructed Person' differ from an 'Ordinary Person'?", o: ["They can issue Permits to Work", "They are adequately advised by skilled persons to avoid danger", "They hold an Authorising Engineer qualification", "They can perform live 400 V switching"], a: 1, e: "An Instructed Person is adequately advised or supervised by a Skilled Person to enable them to avoid electrical dangers."},
-      {c: "Roles & Duties (CPLV)", q: "Under JSP 375 and commercial CPLV frameworks, what is the standard maximum interval before a Competent Person (LV) requires formal refresher training and re-appointment review?", o: ["Every 1 year", "Every 3 years", "Every 5 years", "Every 10 years"], a: 1, e: "Standard UK safety frameworks require CPLV refresher training and re-assessment every 3 years."},
-      {c: "Roles & Duties (CPLV)", q: "Within a commercial or MOD estate operating under JSP 375, who is responsible for maintaining the site's Electrical Safety Logbook and controlling access to LV switchrooms?", o: ["The Competent Person", "The Duty Authorised Person", "The Building Receptionist", "The Authorising Engineer"], a: 1, e: "The Duty Authorised Person (AP) manages day-to-day switchroom access, keys, and the Electrical Safety Logbook."},
-      {c: "Roles & Duties (CPLV)", q: "Who is legally regarded as the 'Duty Holder' for an electrical system under the Electricity at Work Regulations 1989?", o: ["Only the person holding a CPLV certificate", "The person or organisation with control of the system", "The local electricity distribution network operator", "The original electrical contractor"], a: 1, e: "Duty Holder status rests with employers, self-employed persons, and employees to the extent they have control over the system."},
-      {c: "Roles & Duties (CPLV)", q: "An electrical apprentice is assigned to assist you (the appointed Competent Person) on a dead LV distribution board repair under a Permit to Work. What level of supervision must you provide?", o: ["Check on them every 2 hours", "Continuous direct supervision", "Remote telephone supervision", "None once the board is isolated"], a: 1, e: "Unappointed or trainee personnel working under a PTW require continuous direct supervision by the Competent Person."},
-      {c: "Roles & Duties (CPLV)", q: "You are asked to carry out maintenance on an unfamiliar LV automatic transfer switch (ATS) that falls outside your training and site-specific competence. What must you do?", o: ["Attempt the work carefully using the manual", "Refuse the task and escalate to the Authorised Person", "Ask an apprentice to assist", "Isolate the main intake without a permit"], a: 1, e: "Under EAWR Regulation 16, you must recognise the limits of your competence and refuse work you are not trained for."},
-      {c: "Regulations (CPLV)", q: "What is the legal status of HSE publication HSG85 (Electricity at Work: Safe Working Practices)?", o: ["Statutory criminal law", "Non-statutory guidance", "An Approved Code of Practice (ACOP)", "A British Standard"], a: 1, e: "HSG85 is non-statutory HSE guidance that helps duty holders comply with the statutory EAWR 1989."},
-      {c: "Documentation (CPLV)", q: "A non-electrical painting contractor needs to repaint the ceiling inside an LV switchroom containing live, enclosed switchgear. Which safety document should the Authorised Person issue?", o: ["Permit to Work", "Sanction for Test", "Limitation of Access", "Electrical Danger Notification"], a: 2, e: "A Limitation of Access (LOA) defines safe working boundaries for non-electrical work near live apparatus."},
-      {c: "Documentation (CPLV)", q: "Following the repair of a faulted LV sub-main cable under JSP 375 rules, controlled electrical testing must be carried out requiring temporary removal of earths and application of test voltages. Which document authorises this?", o: ["Permit to Work", "Limitation of Access", "Sanction for Test", "Standing Instruction"], a: 2, e: "A Sanction for Test (SFT) authorises controlled testing on isolated systems where test voltages are applied."},
-      {c: "Documentation (CPLV)", q: "Under a formal Permit to Work system using a Safety Key Box (SKB), where is the key to the Authorised Person's safety padlock placed, and who retains the SKB key while work is in progress?", o: ["In the site office, with the key held by the AE", "Inside the SKB, with the SKB key held by the CP", "On the AP's belt, with the SKB left unlocked", "Inside the distribution board enclosure"], a: 1, e: "The isolation padlock key is locked inside the SKB, and the CP retains the SKB key for the duration of the PTW."},
-      {c: "Documentation (CPLV)", q: "Under JSP 375 electrical safety rules, for how long must completed and cancelled safety documents (such as Permits to Work) normally be retained?", o: ["6 months", "1 year", "3 years", "10 years"], a: 2, e: "Completed and cancelled safety documents are normally retained for a minimum of 3 years for audit purposes."},
-      {c: "Safe Isolation (CPLV)", q: "You are preparing to isolate a main LV switchboard connected to both a standby diesel generator and a bank of power factor correction (PFC) capacitors. What precaution is essential in addition to locking off the main utility isolator?", o: ["Switch off the switchroom lighting", "Isolate alternative supplies and verify capacitor discharge", "Remove the earth bonding", "Disconnect the generator starter battery only"], a: 1, e: "All sources of back-feed (generators/UPS) must be isolated and stored energy (capacitors) safely discharged."}
-    ];
-
-    // 15 CPLVH (Healthcare / HTM 06-02 / HTM 06-01) Specific Questions
-    const CPLVH_SPECIFIC = [
-      {c: "HTM 06-02 Governance", q: "What is the primary purpose of Health Technical Memorandum 06-02 (HTM 06-02)?", o: ["Design of hospital high-voltage transformers", "Operational electrical safety guidance for low voltage systems in healthcare premises", "Testing of portable medical devices only", "Fire alarm commissioning in NHS wards"], a: 1, e: "HTM 06-02 provides operational management and safe working practices for Low Voltage electrical systems in healthcare premises."},
-      {c: "HTM 06-02 Governance", q: "Under HTM 06-02, who is the Board-level director with overall responsibility for the healthcare organisation's electrical safety policy and management structure?", o: ["Authorising Engineer (LV)", "Designated Person (DP)", "Authorised Person (LV)", "Competent Person (LV)"], a: 1, e: "The Designated Person (DP) is the senior Board-level individual who holds overall accountability for the Trust's electrical safety policy."},
-      {c: "HTM 06-02 Governance", q: "An electrician holds a valid City & Guilds Assured CPLVH certificate from a previous NHS Trust and starts at a new hospital. What is required before they can act as a CP(LV) on the new site?", o: ["Countersigning by the previous Trust", "Formal written site-specific appointment by the new hospital's AP(LV) / Management", "Retaking the 2-day course immediately", "Verbal approval from the estates supervisor"], a: 1, e: "A CPLVH certificate proves training, but formal written site-specific appointment is mandatory before acting as a CP(LV) at any hospital."},
-      {c: "HTM 06-02 Governance", q: "Under HTM 06-02, who conducts independent annual compliance audits of the hospital's LV safety management system and recommends candidates for appointment as Authorised Persons (LV)?", o: ["The Duty Authorised Person (LV)", "The Authorising Engineer (LV)", "The Competent Person (LV)", "The Clinical Ward Manager"], a: 1, e: "The Authorising Engineer (LV) is the independent specialist who audits the Trust's LV system and assesses AP(LV) candidates."},
-      {c: "HTM 06-02 Governance", q: "Under HTM 06-02, who is responsible for assessing and appointing Competent Persons (LV) in writing for specific hospital sites and tasks?", o: ["The Clinical Matron", "The Authorised Person (LV)", "Another Competent Person", "The HSE Inspector"], a: 1, e: "Under HTM 06-02, the Authorised Person (LV) assesses competence and formally appoints Competent Persons (LV) in writing on behalf of management."},
-      {c: "HTM 06-02 Governance", q: "Under HTM 06-02, what is the standard maximum interval before a Competent Person (LV) requires formal refresher training and re-appointment review?", o: ["Every 1 year", "Every 3 years", "Every 5 years", "Every 10 years"], a: 1, e: "HTM 06-02 requires formal CPLVH refresher training and re-assessment at intervals not exceeding 3 years."},
-      {c: "HTM 06-02 Governance", q: "Within a hospital operating under HTM 06-02, who is responsible for maintaining the Electrical Safety Logbook and controlling keys to LV switchrooms?", o: ["The Competent Person (LV)", "The Duty Authorised Person (LV)", "Hospital Security", "The Authorising Engineer (LV)"], a: 1, e: "The Duty Authorised Person (LV) manages day-to-day switchroom access, key control, and the Electrical Safety Logbook."},
-      {c: "Healthcare Systems", q: "Before isolating ANY distribution board feeding a hospital ward or clinical department, what is the mandatory first operational step?", o: ["Switch off the breaker immediately to save time", "Liaise with and obtain agreement from the clinical/ward manager", "Post a Caution Notice on the ward door", "Disconnect the standby generator"], a: 1, e: "Unplanned power loss in healthcare can endanger patients; clinical liaison and formal agreement are mandatory before any isolation."},
-      {c: "Healthcare Systems", q: "Under BS 7671 Section 710 and HTM 06-01, how is an Operating Theatre or Intensive Care Unit (ICU) where life-support and intracardiac procedures take place classified?", o: ["Group 0 Medical Location", "Group 1 Medical Location", "Group 2 Medical Location", "Group 3 Industrial Location"], a: 2, e: "Group 2 medical locations are areas where applied parts are used for intracardiac procedures, operating theatres, and vital life-support treatments."},
-      {c: "Healthcare Systems", q: "What is the primary safety purpose of a Medical Isolated Power Supply (IPS) in a Group 2 hospital location such as an operating theatre?", o: ["To double the mains voltage to 460 V", "To prevent a first earth fault from tripping the supply to life-support equipment", "To eliminate the need for safe isolation", "To power non-essential corridor lighting"], a: 1, e: "An IPS uses an isolation transformer and Insulation Monitoring Device (IMD) so a first fault to earth alarms without interrupting critical life-support power."},
-      {c: "Healthcare Systems", q: "What device continuously monitors the insulation resistance of a hospital Medical IPS and triggers an audible/visual alarm if a first earth fault occurs?", o: ["RCD (Residual Current Device)", "IMD (Insulation Monitoring Device)", "MCB (Miniature Circuit Breaker)", "AFDD (Arc Fault Detection Device)"], a: 1, e: "An Insulation Monitoring Device (IMD) alerts clinical and estates staff to a first earth fault on an IPS without disconnecting power."},
-      {c: "Healthcare Systems", q: "Why do hospital LV distribution systems present an elevated risk of unexpected back-feeds during isolation?", o: ["Because hospital cables are coloured differently", "Due to essential/non-essential dual supplies, standby generators, UPS, and IPS systems", "Because hospitals only use DC power", "Because breakers are never labelled"], a: 1, e: "Hospitals rely on resilience systems (generators, UPS, IPS, dual feeders) that can back-feed an apparently isolated panel if not all sources are isolated."},
-      {c: "Healthcare Systems", q: "In a hospital, what distinguishes an 'Essential' LV supply from a 'Non-Essential' LV supply?", o: ["Essential supplies are backed up by standby generation/UPS for clinical safety", "Essential supplies operate at 110 V AC only", "Non-essential supplies do not require safe isolation", "Essential supplies are only for administrative offices"], a: 0, e: "Essential supplies are backed by standby generators and/or UPS to maintain life-safety and critical clinical services during mains failure."},
-      {c: "Documentation (HTM 06-02)", q: "Under an HTM 06-02 Permit to Work using a Safety Key Box (SKB), where is the key to the AP's safety padlock placed, and who retains the SKB key while work is in progress?", o: ["In the estates office, with the key held by the AE", "Inside the SKB, with the SKB key held by the CP(LV)", "On the AP's belt, with the SKB left unlocked", "Inside the distribution board enclosure"], a: 1, e: "The isolation padlock key is locked inside the SKB, and the CP(LV) retains the SKB key for the duration of the PTW."},
-      {c: "Documentation (HTM 06-02)", q: "Under HTM 06-02 electrical safety rules, for how long must completed and cancelled safety documents (such as Permits to Work) normally be retained?", o: ["6 months", "1 year", "3 years", "10 years"], a: 2, e: "HTM 06-02 requires completed and cancelled safety documents to be retained for a minimum of 3 years for audit purposes."}
-    ];
-
-    let track = "cplv";
-    let mode = "mock30";
-    let activeQuestions = [];
-    let currentIndex = 0;
-    let score = 0;
-    let catStats = {};
-
-    function shuffle(arr) {
-      const copy = [...arr];
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
-
-    function setTrack(newTrack) {
-      track = newTrack;
-      const isHealth = track === "cplvh";
-      document.getElementById("btn-cplv").className = `toggle-btn ${!isHealth ? "active" : ""}`;
-      document.getElementById("btn-cplvh").className = `toggle-btn ${isHealth ? "active-health" : ""}`;
-      document.getElementById("main-title").textContent = isHealth
-        ? "City & Guilds CPLVH (HTM 06-02) Mock Exam"
-        : "City & Guilds CPLV Mock Exam";
-      document.getElementById("main-subtitle").innerHTML = isHealth
-        ? "Healthcare LV (HTM 06-02 &amp; HTM 06-01) &bull; 75-Question Bank &bull; Pass Mark: 70%"
-        : "Commercial / MOD (JSP 375 &amp; HSG85) &bull; 75-Question Bank &bull; Pass Mark: 70%";
-      startQuiz();
-    }
-
-    function setMode(newMode) {
-      mode = newMode;
-      document.getElementById("btn-mock30").classList.toggle("active", mode === "mock30");
-      document.getElementById("btn-full75").classList.toggle("active", mode === "full75");
-      startQuiz();
-    }
-
-    function startQuiz() {
-      const bank = track === "cplvh"
-        ? [...SHARED_QUESTIONS, ...CPLVH_SPECIFIC]
-        : [...SHARED_QUESTIONS, ...CPLV_SPECIFIC];
-      const shuffled = shuffle(bank);
-      activeQuestions = mode === "mock30" ? shuffled.slice(0, 30) : shuffled;
-      currentIndex = 0;
-      score = 0;
-      catStats = {};
-      document.getElementById("quiz-card").classList.remove("hidden");
-      document.getElementById("result-card").classList.add("hidden");
-      renderQuestion();
-    }
-
-    function renderQuestion() {
-      const item = activeQuestions[currentIndex];
-      document.getElementById("q-counter").textContent = `Question ${currentIndex + 1} of ${activeQuestions.length}`;
-      document.getElementById("q-category").textContent = item.c;
-      document.getElementById("q-score").textContent = `Score: ${score}`;
-      document.getElementById("progress-fill").style.width = `${(currentIndex / activeQuestions.length) * 100}%`;
-      document.getElementById("question-text").textContent = item.q;
-
-      const expEl = document.getElementById("explanation");
-      expEl.classList.remove("show");
-      expEl.textContent = "";
-      document.getElementById("next-btn").classList.add("hidden");
-
-      const optsEl = document.getElementById("options");
-      optsEl.innerHTML = "";
-      item.o.forEach((optText, idx) => {
-        const btn = document.createElement("button");
-        btn.className = "option-btn";
-        btn.textContent = optText;
-        btn.onclick = () => selectAnswer(idx);
-        optsEl.appendChild(btn);
-      });
-    }
-
-    function selectAnswer(selectedIdx) {
-      const item = activeQuestions[currentIndex];
-      const buttons = document.querySelectorAll(".option-btn");
-      buttons.forEach((b, idx) => {
-        b.disabled = true;
-        if (idx === item.a) b.classList.add("correct");
-        else if (idx === selectedIdx) b.classList.add("wrong");
-      });
-
-      if (!catStats[item.c]) catStats[item.c] = {correct: 0, total: 0};
-      catStats[item.c].total++;
-      if (selectedIdx === item.a) {
-        score++;
-        catStats[item.c].correct++;
-      }
-
-      document.getElementById("q-score").textContent = `Score: ${score}`;
-      const expEl = document.getElementById("explanation");
-      expEl.textContent = item.e;
-      expEl.classList.add("show");
-
-      const nextBtn = document.getElementById("next-btn");
-      nextBtn.textContent = currentIndex === activeQuestions.length - 1 ? "View Results" : "Next Question →";
-      nextBtn.classList.remove("hidden");
-    }
-
-    function nextQuestion() {
-      currentIndex++;
-      if (currentIndex < activeQuestions.length) {
-        renderQuestion();
-      } else {
-        showResults();
-      }
-    }
-
-    function showResults() {
-      document.getElementById("quiz-card").classList.add("hidden");
-      document.getElementById("result-card").classList.remove("hidden");
-
-      const pct = Math.round((score / activeQuestions.length) * 100);
-      const passed = pct >= 70;
-      const trackLabel = track === "cplvh" ? "CPLVH (HTM 06-02)" : "CPLV";
-      const badge = document.getElementById("pass-badge");
-      badge.textContent = passed ? "PASS (70%+)" : "BELOW PASS MARK (<70%)";
-      badge.className = `pass-pill ${passed ? "pass" : "fail"}`;
-
-      document.getElementById("final-score").textContent = `${score} / ${activeQuestions.length} (${pct}%)`;
-      document.getElementById("final-sub").textContent = passed
-        ? `Great work — you met the City & Guilds Assured ${trackLabel} pass threshold.`
-        : `Review the categories below and try another shuffled ${trackLabel} sitting.`;
-
-      const breakdown = document.getElementById("cat-breakdown");
-      breakdown.innerHTML = "";
-      Object.entries(catStats).forEach(([cat, st]) => {
-        const div = document.createElement("div");
-        div.className = "cat-box";
-        const cPct = Math.round((st.correct / st.total) * 100);
-        div.innerHTML = `<strong>${cat}</strong>${st.correct} / ${st.total} (${cPct}%)`;
-        breakdown.appendChild(div);
-      });
-    }
-
-    startQuiz();
-  </script>
+  <script type="module" src="js/app.js"></script>
 </body>
-
 </html>
